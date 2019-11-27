@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { Image, Text, View, ScrollView } from 'react-native'
 import { withNavigation } from 'react-navigation';
-import SingleCity from '../components/SingleCity'
+import Grilla from '../Grilla'
+
 
 const Home = (props) => {
     const { navigate } = props.navigation
-
+    const {cod} = props
+    const { getParam } = props.navigation
+    const item = getParam('cod', 'NO-name');
+    console.log(item)
+    const codFin = item !== 'NO-name' ? item : cod
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
@@ -13,7 +18,7 @@ const Home = (props) => {
     }, [])
     const fetchData = async () => {
         try {
-            const response = await fetch(`https://www.metaweather.com/api/location/468739/`);
+            const response = await fetch(`https://www.metaweather.com/api/location/${codFin}/`);
             if (!response.ok) {
                 throw Error(response.statusText);
             }
@@ -28,8 +33,8 @@ const Home = (props) => {
 
 
     return (
-        <ScrollView style={{backgroundColor: '#3CAADF', flex:1}}>
-            <SingleCity cod={468739}/>
+        <ScrollView>
+            {!isLoading && <Grilla data={data}/> }
         </ScrollView>
     )
 }

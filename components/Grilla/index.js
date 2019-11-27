@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Titulo, TextSunRise, TextSunSet, PuestaSol, Grados, SunRiseHour, SunSetHour, ImageClima, DiasSiguientes, ImageDiasSiguientes, ContainerDiasSiguientes, ContainerDiasSigTemp, TempSiguientesMax, TempSiguientesMin } from './styled'
+import { Container, Titulo, TextSunRise, TextSunSet, PuestaSol, Grados, SunRiseHour, SunSetHour, ImageClima, DiasSiguientes, ImageDiasSiguientes, ContainerDiasSiguientes, ContainerDiasSigTemp, TempSiguientesMax, TempSiguientesMin, Text } from './styled'
 import { withNavigation } from 'react-navigation';
 import { TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,33 +16,35 @@ const Grilla = (props) => {
 
     const { title, sun_rise, sun_set, consolidated_weather } = props.data
 
-    // console.log('consolidated array: ',consolidated_weather)
+    console.log('array: ',props)
 
     const temp = consolidated_weather[0].the_temp
 
+    const humedad = consolidated_weather[0].humidity
+
+    const viento = consolidated_weather[0].wind_speed
+    const vientoNum = Math.round(viento)
+    const vientoDir = consolidated_weather[0].wind_direction_compass
+
+    const visibilidad = Math.round(consolidated_weather[0].visibility)
+    const previsivilidad = consolidated_weather[0].predictability
+
     const imageClima = consolidated_weather[0].weather_state_abbr
 
-    // const sunRise = dayjs(sun_rise).locale('es').format('HH:mm')
-    // const sunSet = dayjs(sun_set).locale('es').format('HH:mm')
+    const sunRise = dayjs(sun_rise).locale('es').format('HH:mm')
+    const sunSet = dayjs(sun_set).locale('es').format('HH:mm')
 
     return (
         <Container>
             <TouchableHighlight onPress={() => navigate('Details')}>
-                <Icon name="bars" size={30} color="#fff" style= {{marginLeft: 20, marginTop: 20}}/>
+                <Icon name="bars" size={30} color="#fff" style= {{marginLeft: 20, marginTop: 60}}/>
             </TouchableHighlight>
 
             <Titulo>{title}</Titulo>
             <ImageClima source={{ uri: `https://www.metaweather.com/static/img/weather/png/64/${imageClima}.png` }} />
             <Grados>{Math.round(temp)}&#176;</Grados>
 
-            {/* <PuestaSol>
-                <TextSunRise>Amanecer</TextSunRise>
-                <TextSunSet>Atardecer</TextSunSet>
-            </PuestaSol>
-            <PuestaSol>
-                <SunRiseHour>{sunRise}</SunRiseHour>
-                <SunSetHour>{sunSet}</SunSetHour>
-            </PuestaSol> */}
+            
 
             {consolidated_weather.map(element => {
                 return (
@@ -56,6 +58,32 @@ const Grilla = (props) => {
                     </ContainerDiasSiguientes>
                 )
             })}
+
+            <Icon name="angle-double-down" size={40} color="#fff" style= {{marginTop: 30, marginBottom: 30, marginLeft: '47%'}}/>
+            <PuestaSol>
+                <TextSunRise>Sunrise</TextSunRise>
+                <TextSunSet>Sunset</TextSunSet>
+            </PuestaSol>
+            <PuestaSol>
+                <SunRiseHour>{sunRise}</SunRiseHour>
+                <SunSetHour>{sunSet}</SunSetHour>
+            </PuestaSol>
+            <PuestaSol>
+                <TextSunRise>Humidity</TextSunRise>
+                <TextSunRise>Wind</TextSunRise>
+            </PuestaSol>
+            <PuestaSol>
+                <SunSetHour>{humedad}%</SunSetHour>
+                <SunSetHour>{vientoDir} {vientoNum} km/hr</SunSetHour>
+            </PuestaSol>
+            <PuestaSol>
+                <TextSunRise>Visibility</TextSunRise>
+                <TextSunRise>Predictability</TextSunRise>
+            </PuestaSol>
+            <PuestaSol>
+                <SunSetHour>{visibilidad}km</SunSetHour>
+                <SunSetHour>{previsivilidad}%</SunSetHour>
+            </PuestaSol>
         </Container>
     )
 }
